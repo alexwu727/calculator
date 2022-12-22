@@ -18,6 +18,23 @@ const App = () => {
     num: 0,
     res: 0,
   });
+  const numClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+
+    if (calc.num.length < 16) {
+      setCalc({
+        ...calc,
+        num:
+          calc.num === 0 && value === "0"
+            ? "0"
+            : calc.num % 1 === 0
+              ? Number(calc.num + value)
+              : calc.num + value,
+        res: !calc.sign ? 0 : calc.res,
+      });
+    }
+  };
   return (
     <Wrapper>
       <Screen value={calc.num ? calc.num : calc.res} />
