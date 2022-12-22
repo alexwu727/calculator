@@ -2,6 +2,7 @@ import Wrapper from "./components/Wrapper";
 import Screen from "./components/Screen";
 import ButtonBox from "./components/ButtonBox";
 import Button from "./components/Button";
+import { useState } from "react";
 
 const btnValues = [
   ["C", "+-", "%", "/"],
@@ -14,7 +15,7 @@ const btnValues = [
 const App = () => {
   return (
     <Wrapper>
-      <Screen value="0" />
+      <Screen value={calc.num ? calc.num : calc.res} />
       <ButtonBox>
         {
           btnValues.flat().map((btn, i) => {
@@ -24,6 +25,19 @@ const App = () => {
                 className={btn === "=" ? "equals" : ""}
                 value={btn}
                 onClick={() => {
+                  btn === "C"
+                    ? resetClickHandler
+                    : btn === "+-"
+                      ? invertClickHandler
+                      : btn === "%"
+                        ? percentClickHandler
+                        : btn === "="
+                          ? equalsClickHandler
+                          : btn === "/" || btn === "X" || btn === "-" || btn === "+"
+                            ? signClickHandler
+                            : btn === "."
+                              ? dotClickHandler
+                              : numClickHandler
                   console.log(`${btn} clicked!`);
                 }}
               />
