@@ -16,14 +16,14 @@ const toLocaleString = (num) =>
 const removeSpaces = (num) => num.toString().replace(/\s/g, "");
 const App = () => {
   const [calc, setCalc] = useState({
-    sign: "",
+    op: "",
     num: 0,
     res: 0,
   });
   const resetClickHandler = () => {
     setCalc({
       ...calc,
-      sign: "",
+      op: "",
       num: 0,
       res: 0,
     });
@@ -31,23 +31,69 @@ const App = () => {
   const invertClickHandler = () => {
     setCalc({
       ...calc,
-      sign: "",
+      op: "",
       num: calc.num ? -calc.num : 0,
       res: calc.res ? -calc.res : 0
     });
   }
   const percentClickHandler = () => {
+    let num = calc.num ? parseFloat(calc.num) : 0;
+    let res = calc.res ? parseFloat(calc.res) : 0;
 
+    setCalc({
+      ...calc,
+      num: (num /= Math.pow(100, 1)),
+      res: (res /= Math.pow(100, 1)),
+      sign: "",
+    });
   }
   const equalsClickHandler = () => {
-
+    if (calc.op && calc.num) {
+      const math = (a, b, op) => {
+        console.log(a, b)
+        return (
+          op === "+"
+            ? a + b
+            : op === "-"
+              ? a - b
+              : op === "X"
+                ? a * b
+                : a / b)
+      }
+      setCalc({
+        ...calc,
+        res:
+          calc.num === "0" && calc.op === "/"
+            ? "Can't divide with 0"
+            : math(Number(calc.res), Number(calc.num), calc.op),
+        op: "",
+        num: 0,
+      });
+    }
   }
   const opClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-  }
-  const dotClickHandler = () => {
 
+    setCalc({
+      ...calc,
+      op: value,
+      res: !calc.res && calc.num ? calc.num : calc.res,
+      num: 0,
+    });
+    // if (calc.op) {
+    //   equalsClickHandler()
+    // }
+
+  }
+  const dotClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+
+    setCalc({
+      ...calc,
+      num: !calc.num.toString().includes(".") ? calc.num + value : calc.num,
+    });
   }
   const numClickHandler = (e) => {
     e.preventDefault();
@@ -59,7 +105,7 @@ const App = () => {
       setCalc({
         ...calc,
         num: newNum,
-        res: !calc.sign ? 0 : calc.res,
+        res: !calc.op ? 0 : calc.res,
       });
     }
   };
