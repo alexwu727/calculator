@@ -11,26 +11,54 @@ const btnValues = [
   [1, 2, 3, "+"],
   [0, ".", "="],
 ];
-
+const toLocaleString = (num) =>
+  String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, "$1 ");
+const removeSpaces = (num) => num.toString().replace(/\s/g, "");
 const App = () => {
   const [calc, setCalc] = useState({
     sign: "",
     num: 0,
     res: 0,
   });
+  const resetClickHandler = () => {
+    setCalc({
+      ...calc,
+      sign: "",
+      num: 0,
+      res: 0,
+    });
+  }
+  const invertClickHandler = () => {
+    setCalc({
+      ...calc,
+      sign: "",
+      num: calc.num ? -calc.num : 0,
+      res: calc.res ? -calc.res : 0
+    });
+  }
+  const percentClickHandler = () => {
+
+  }
+  const equalsClickHandler = () => {
+
+  }
+  const opClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+  }
+  const dotClickHandler = () => {
+
+  }
   const numClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-
-    if (calc.num.length < 16) {
+    if (calc.num.toString().length < 16) {
+      const newNum = removeSpaces(calc.num) % 1 === 0 && !calc.num.toString().includes(".")
+        ? toLocaleString(Number(removeSpaces(calc.num + value)))
+        : toLocaleString(calc.num + value);
       setCalc({
         ...calc,
-        num:
-          calc.num === 0 && value === "0"
-            ? "0"
-            : calc.num % 1 === 0
-              ? Number(calc.num + value)
-              : calc.num + value,
+        num: newNum,
         res: !calc.sign ? 0 : calc.res,
       });
     }
@@ -46,7 +74,7 @@ const App = () => {
                 key={i}
                 className={btn === "=" ? "equals" : ""}
                 value={btn}
-                onClick={() => {
+                onClick={
                   btn === "C"
                     ? resetClickHandler
                     : btn === "+-"
@@ -56,12 +84,11 @@ const App = () => {
                         : btn === "="
                           ? equalsClickHandler
                           : btn === "/" || btn === "X" || btn === "-" || btn === "+"
-                            ? signClickHandler
+                            ? opClickHandler
                             : btn === "."
                               ? dotClickHandler
                               : numClickHandler
-                  console.log(`${btn} clicked!`);
-                }}
+                }
               />
             );
           })
