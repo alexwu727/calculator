@@ -45,9 +45,7 @@ const App = () => {
   const invertClickHandler = () => {
     setCalc({
       ...calc,
-      op: "",
-      num: calc.num ? -calc.num : 0,
-      res: calc.res ? -calc.res : 0
+      num: calc.num ? -calc.num : 0
     });
   }
   const percentClickHandler = () => {
