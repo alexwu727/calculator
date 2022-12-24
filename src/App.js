@@ -14,12 +14,26 @@ const btnValues = [
 const toLocaleString = (num) =>
   String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, "$1 ");
 const removeSpaces = (num) => num.toString().replace(/\s/g, "");
+
 const App = () => {
   const [calc, setCalc] = useState({
     op: "",
     num: 0,
     res: 0,
   });
+  const calculate = (a = Number(calc.res), b = Number(calc.num), op = calc.op) => {
+    if (b === 0 && op === "/") {
+      return "Can't divide with 0"
+    }
+    return (
+      op === "+"
+        ? a + b
+        : op === "-"
+          ? a - b
+          : op === "X"
+            ? a * b
+            : a / b)
+  }
   const resetClickHandler = () => {
     setCalc({
       ...calc,
@@ -37,32 +51,18 @@ const App = () => {
     });
   }
   const percentClickHandler = () => {
-    let num = calc.num ? parseFloat(calc.num) : 0;
-    let res = calc.res ? parseFloat(calc.res) : 0;
-
+    if (!calc.num) {
+      return
+    }
+    let num = parseFloat(calc.num) / Math.pow(100, 1)
     setCalc({
       ...calc,
-      num: (num /= Math.pow(100, 1)),
-      res: (res /= Math.pow(100, 1)),
-      sign: "",
+      num: 0,
+      res: calc.op ? calculate(calc.res, num) : num,
+      op: "",
     });
   }
-  const calculate = () => {
-    let a = Number(calc.res)
-    let b = Number(calc.num)
-    let op = calc.op
-    if (b === 0 && op === "/") {
-      return "Can't divide with 0"
-    }
-    return (
-      op === "+"
-        ? a + b
-        : op === "-"
-          ? a - b
-          : op === "X"
-            ? a * b
-            : a / b)
-  }
+
   const equalsClickHandler = () => {
     if (calc.op && calc.num) {
       setCalc({
