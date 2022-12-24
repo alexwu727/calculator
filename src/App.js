@@ -47,25 +47,27 @@ const App = () => {
       sign: "",
     });
   }
+  const calculate = () => {
+    let a = Number(calc.res)
+    let b = Number(calc.num)
+    let op = calc.op
+    if (b === 0 && op === "/") {
+      return "Can't divide with 0"
+    }
+    return (
+      op === "+"
+        ? a + b
+        : op === "-"
+          ? a - b
+          : op === "X"
+            ? a * b
+            : a / b)
+  }
   const equalsClickHandler = () => {
     if (calc.op && calc.num) {
-      const math = (a, b, op) => {
-        console.log(a, b)
-        return (
-          op === "+"
-            ? a + b
-            : op === "-"
-              ? a - b
-              : op === "X"
-                ? a * b
-                : a / b)
-      }
       setCalc({
         ...calc,
-        res:
-          calc.num === "0" && calc.op === "/"
-            ? "Can't divide with 0"
-            : math(Number(calc.res), Number(calc.num), calc.op),
+        res: calculate(),
         op: "",
         num: 0,
       });
@@ -74,16 +76,12 @@ const App = () => {
   const opClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-
     setCalc({
       ...calc,
+      res: calc.op ? calculate() : calc.num ? calc.num : calc.res,
       op: value,
-      res: !calc.res && calc.num ? calc.num : calc.res,
       num: 0,
     });
-    // if (calc.op) {
-    //   equalsClickHandler()
-    // }
 
   }
   const dotClickHandler = (e) => {
@@ -143,22 +141,5 @@ const App = () => {
     </Wrapper>
   );
 };
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
 
 export default App;
